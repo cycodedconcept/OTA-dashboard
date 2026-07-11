@@ -13,3 +13,11 @@ export function isValidEmail(value) {
 
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
 }
+
+export function isValidImei(value) {
+  if (!hasValue(value)) {
+    return false;
+  }
+
+  return /^\d+$/.test(String(value).trim());
+}

@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAdmin } from '../../redux/slices/adminSlice';
 import { closeSidebar, setActivePage } from '../../redux/slices/uiSlice';
+import { navigateToPage } from '../../utils/appRoutes';
 
 const navigationItems = [
-  { key: 'devices', label: 'Devices' },
-  { key: 'projects', label: 'Projects' },
-  { key: 'releases', label: 'Releases' },
-  { key: 'liveJobs', label: 'Live jobs' },
-  { key: 'dispensers', label: 'Dispensers' },
+  { key: 'devices', label: 'Devices', icon: 'bi-hdd-network' },
+  { key: 'projects', label: 'Projects', icon: 'bi-kanban' },
+  { key: 'firmware', label: 'Firmware', icon: 'bi-cpu' },
+  { key: 'imei', label: 'IMEI', icon: 'bi-sim' },
 ];
 
 function Sidebar() {
@@ -16,12 +16,22 @@ function Sidebar() {
 
   function handlePageChange(pageKey) {
     dispatch(setActivePage(pageKey));
+    navigateToPage(pageKey);
     dispatch(closeSidebar());
   }
 
   function handleLogout() {
     dispatch(closeSidebar());
     dispatch(logoutAdmin());
+  }
+
+  function renderSidebarLabel(icon, label) {
+    return (
+      <span className="sidebar-nav__content">
+        <i className={`bi ${icon} sidebar-nav__icon`} aria-hidden="true" />
+        <span>{label}</span>
+      </span>
+    );
   }
 
   return (
@@ -51,7 +61,7 @@ function Sidebar() {
             }`}
             onClick={() => handlePageChange(item.key)}
           >
-            {item.label}
+            {renderSidebarLabel(item.icon, item.label)}
           </button>
         ))}
       </nav>
@@ -65,7 +75,7 @@ function Sidebar() {
             }`}
             onClick={() => handlePageChange('adminAccess')}
           >
-            Settings
+            {renderSidebarLabel('bi-gear', 'Settings')}
           </button>
 
           <button
@@ -73,7 +83,7 @@ function Sidebar() {
             className="sidebar-nav__item sidebar-nav__item--logout text-start"
             onClick={handleLogout}
           >
-            Logout
+            {renderSidebarLabel('bi-box-arrow-right', 'Logout')}
           </button>
         </div>
 

@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getPageFromLocation } from '../../utils/appRoutes';
 
 const initialState = {
-  activePage: 'devices',
+  activePage: getPageFromLocation(),
   isSidebarOpen: false,
 };
 

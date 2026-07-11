@@ -25,8 +25,7 @@ function getBaseUrl() {
   return baseUrl.replace(/\/+$/, '');
 }
 
-async function parseResponseBody(response) {
-  const rawBody = await response.text();
+function parseRawBody(rawBody) {
   const trimmedBody = rawBody.trim();
 
   if (!trimmedBody) {
@@ -40,15 +39,41 @@ async function parseResponseBody(response) {
   }
 }
 
-async function request(path, options = {}) {
-  const headers = new Headers(options.headers ?? {});
+async function parseResponseBody(response) {
+  const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
+
+  if (
+    contentType &&
+    !contentType.includes('application/json') &&
+    !contentType.startsWith('text/') &&
+    !contentType.includes('application/xml') &&
+    !contentType.includes('application/javascript')
+  ) {
+    return response.blob();
+  }
+
+  return parseRawBody(await response.text());
+}
+
+function getRequestHeaders(customHeaders = {}) {
+  const headers = new Headers(customHeaders);
   const token = readStoredAdminToken();
 
   if (token && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const response = await fetch(`${getBaseUrl()}${path}`, {
+  return headers;
+}
+
+function buildUrl(path) {
+  return `${getBaseUrl()}${path}`;
+}
+
+async function request(path, options = {}) {
+  const headers = getRequestHeaders(options.headers ?? {});
+
+  const response = await fetch(buildUrl(path), {
     ...options,
     headers,
   });
@@ -68,7 +93,83 @@ async function request(path, options = {}) {
     });
   }
 
-  return data;
+  return options.includeMeta
+    ? {
+        data,
+        headers: response.headers,
+        status: response.status,
+      }
+    : data;
+}
+
+function upload(path, body, options = {}) {
+  const headers = getRequestHeaders(options.headers ?? {});
+
+  return new Promise((resolve, reject) => {
+    const requestInstance = new XMLHttpRequest();
+
+    requestInstance.open(options.method ?? 'POST', buildUrl(path));
+
+    headers.forEach((value, key) => {
+      requestInstance.setRequestHeader(key, value);
+    });
+
+    if (typeof options.onUploadProgress === 'function') {
+      requestInstance.upload.addEventListener('progress', (event) => {
+        options.onUploadProgress({
+          lengthComputable: event.lengthComputable,
+          loaded: event.loaded,
+          percent: event.lengthComputable
+            ? Math.round((event.loaded / event.total) * 100)
+            : null,
+          total: event.total,
+        });
+      });
+    }
+
+    requestInstance.addEventListener('error', () => {
+      reject(
+        createApiError({
+          message: 'Network request failed.',
+          status: requestInstance.status || null,
+        })
+      );
+    });
+
+    requestInstance.addEventListener('load', () => {
+      const data = parseRawBody(requestInstance.responseText);
+
+      if (requestInstance.status < 200 || requestInstance.status >= 300) {
+        reject(
+          createApiError({
+            data,
+            message: getApiErrorMessage(
+              {
+                data,
+                statusText: requestInstance.statusText,
+              },
+              `Request failed with status ${requestInstance.status}.`
+            ),
+            status: requestInstance.status,
+          })
+        );
+
+        return;
+      }
+
+      resolve(
+        options.includeMeta
+          ? {
+              data,
+              headers: requestInstance.getAllResponseHeaders(),
+              status: requestInstance.status,
+            }
+          : data
+      );
+    });
+
+    requestInstance.send(body);
+  });
 }
 
 const apiClient = {
@@ -84,6 +185,9 @@ const apiClient = {
       body,
       method: 'POST',
     });
+  },
+  upload(path, body, options = {}) {
+    return upload(path, body, options);
   },
 };
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import loginHero from '../assets/login-hero.png';
 import { clearLoginState, loginAdmin } from '../redux/slices/adminSlice';
 import { setActivePage } from '../redux/slices/uiSlice';
+import { navigateToPage } from '../utils/appRoutes';
 import { getApiFieldError } from '../utils/apiErrors';
 import { isValidEmail } from '../utils/formValidation';
 
@@ -53,6 +54,7 @@ function LoginPage({ onSwitchToRegister }) {
         })
       ).unwrap();
       dispatch(setActivePage('devices'));
+      navigateToPage('devices', { replace: true });
       setPassword('');
     } catch {
       // Slice state carries the user-facing error details.

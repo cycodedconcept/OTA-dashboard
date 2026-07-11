@@ -396,6 +396,16 @@
   color: #ffffff;
 }
 
+.sidebar-nav__content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.sidebar-nav__icon {
+  font-size: 0.95rem;
+}
+
 .sidebar-nav__item--logout {
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.9);
@@ -1040,6 +1050,38 @@
   text-align: left;
 }
 
+.upload-dropzone--interactive {
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.upload-dropzone--interactive:hover,
+.upload-dropzone--interactive:focus-within {
+  border-color: rgba(8, 122, 85, 0.38);
+  background: #fbfefa;
+  transform: translateY(-1px);
+}
+
+.upload-dropzone.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.upload-dropzone__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .upload-dropzone__label {
   margin: 0 0 0.45rem;
   color: var(--text-muted);
@@ -1058,6 +1100,194 @@
   margin: 0.15rem 0 0;
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+.upload-dropzone__file-list {
+  margin: 0.8rem 0 0;
+  padding-left: 1rem;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.upload-dropzone__file-item + .upload-dropzone__file-item {
+  margin-top: 0.2rem;
+}
+
+.firmware-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.firmware-tabs__button {
+  min-width: 170px;
+}
+
+.firmware-tabs__button-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.firmware-tabs__icon {
+  font-size: 0.95rem;
+}
+
+.firmware-textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.firmware-device-picker {
+  height: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfa 100%);
+}
+
+.firmware-device-picker__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.firmware-device-picker__list {
+  display: grid;
+  gap: 0.7rem;
+  max-height: 320px;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.firmware-device-picker__option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.firmware-device-picker__option:hover {
+  border-color: #cfd8cf;
+  background: #fcfdfc;
+  transform: translateY(-1px);
+}
+
+.firmware-device-picker__option.is-selected {
+  border-color: rgba(8, 122, 85, 0.42);
+  background: rgba(8, 122, 85, 0.06);
+}
+
+.firmware-device-picker__value,
+.firmware-device-picker__meta {
+  margin: 0;
+}
+
+.firmware-device-picker__value {
+  color: var(--text-main);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.firmware-device-picker__meta {
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.firmware-selection-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.9rem;
+}
+
+.firmware-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.firmware-progress__track {
+  height: 0.72rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf3ee;
+}
+
+.firmware-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f8e65 0%, #27b07d 100%);
+  transition: width 0.2s ease;
+}
+
+.firmware-progress__label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.firmware-ota-card__header,
+.firmware-ota-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 1.2rem;
+}
+
+.firmware-ota-card__header {
+  border-bottom: 1px solid var(--border);
+}
+
+.firmware-ota-card__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.firmware-ota-card__footer {
+  border-top: 1px solid var(--border);
+}
+
+.table-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.table-pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-pagination__button {
+  min-width: 2.85rem;
+  justify-content: center;
+}
+
+.table-pagination__ellipsis {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .releases-page__upload-btn {
@@ -1242,6 +1472,15 @@
   }
 
   .page-section__actions {
+    justify-content: flex-start;
+  }
+
+  .firmware-ota-card__header,
+  .firmware-ota-card__footer {
+    align-items: flex-start;
+  }
+
+  .table-pagination {
     justify-content: flex-start;
   }
 
