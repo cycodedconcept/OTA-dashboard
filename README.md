@@ -2,21 +2,33 @@
 
 ## Environment
 
-The frontend reads its production API base URL from `VITE_API_BASE_URL`.
+The frontend uses the same-origin `/ota-api` path by default. In local development, Vite proxies that path to the upstream backend. In Vercel, `vercel.json` rewrites the same path to the upstream backend.
 
 Example:
+
+```bash
+VITE_API_BASE_URL=/ota-api
+```
+
+You only need `VITE_API_BASE_URL` if you want to override that default with another same-origin API path.
+
+## Vercel
+
+If a Vercel deployment shows CORS errors for requests to `https://zubitechnologies.com/ota_server/api/...`, make sure the deployed app is using `/ota-api` instead of calling the upstream API directly.
+
+If you previously set:
 
 ```bash
 VITE_API_BASE_URL=https://zubitechnologies.com/ota_server/api
 ```
 
-In local development, the app uses the Vite proxy at `/ota-api`, so this variable is mainly required for production-style builds and deployments.
+change it to:
 
-## Vercel
+```bash
+VITE_API_BASE_URL=/ota-api
+```
 
-If a Vercel deployment shows `VITE_API_BASE_URL is not configured`, add `VITE_API_BASE_URL` in the Vercel project settings for the environments you use and redeploy.
-
-The app also includes a production fallback to `https://zubitechnologies.com/ota_server/api`, which matches the existing local proxy target.
+or remove the variable entirely and redeploy. Vercel only applies environment variable changes to new deployments.
 
 ## Vite Template Notes
 

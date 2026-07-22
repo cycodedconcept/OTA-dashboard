@@ -1,11 +1,13 @@
 {
-  "routes": [
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
     {
-      "handle": "filesystem"
+      "source": "/ota-api/:path*",
+      "destination": "https://zubitechnologies.com/ota_server/api/:path*"
     },
     {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

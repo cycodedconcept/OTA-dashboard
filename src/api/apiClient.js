@@ -1,7 +1,7 @@
 import { getApiErrorMessage } from '../utils/apiErrors';
 import { readStoredAdminToken } from '../utils/adminSession';
 
-const DEFAULT_API_BASE_URL = 'https://zubitechnologies.com/ota_server/api';
+const DEFAULT_API_BASE_URL = '/ota-api';
 
 export function createApiError({ data = null, message, status = null }) {
   const error = new Error(message);
@@ -12,14 +12,31 @@ export function createApiError({ data = null, message, status = null }) {
 }
 
 function getBaseUrl() {
-  if (import.meta.env.DEV) {
-    return '/ota-api';
-  }
-
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
-  // Keep production aligned with the same backend used by the dev proxy.
-  return (baseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '');
+  if (!baseUrl) {
+    return DEFAULT_API_BASE_URL;
+  }
+
+  if (baseUrl.startsWith('/')) {
+    return baseUrl.replace(/\/+$/, '');
+  }
+
+  if (typeof window !== 'undefined') {
+    try {
+      const resolvedUrl = new URL(baseUrl, window.location.origin);
+
+      // Prefer the local proxy for browser requests to avoid CORS issues
+      // when the configured API origin differs from the app's origin.
+      if (resolvedUrl.origin !== window.location.origin) {
+        return DEFAULT_API_BASE_URL;
+      }
+    } catch {
+      return DEFAULT_API_BASE_URL;
+    }
+  }
+
+  return baseUrl.replace(/\/+$/, '');
 }
 
 function parseRawBody(rawBody) {
