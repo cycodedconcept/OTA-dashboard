@@ -1,6 +1,8 @@
 import { getApiErrorMessage } from '../utils/apiErrors';
 import { readStoredAdminToken } from '../utils/adminSession';
 
+const DEFAULT_API_BASE_URL = 'https://zubitechnologies.com/ota_server/api';
+
 export function createApiError({ data = null, message, status = null }) {
   const error = new Error(message);
   error.data = data;
@@ -16,13 +18,8 @@ function getBaseUrl() {
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
-  if (!baseUrl) {
-    throw createApiError({
-      message: 'VITE_API_BASE_URL is not configured.',
-    });
-  }
-
-  return baseUrl.replace(/\/+$/, '');
+  // Keep production aligned with the same backend used by the dev proxy.
+  return (baseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '');
 }
 
 function parseRawBody(rawBody) {

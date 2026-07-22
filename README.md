@@ -1,4 +1,24 @@
-# React + Vite
+# OTA Dashboard
+
+## Environment
+
+The frontend reads its production API base URL from `VITE_API_BASE_URL`.
+
+Example:
+
+```bash
+VITE_API_BASE_URL=https://zubitechnologies.com/ota_server/api
+```
+
+In local development, the app uses the Vite proxy at `/ota-api`, so this variable is mainly required for production-style builds and deployments.
+
+## Vercel
+
+If a Vercel deployment shows `VITE_API_BASE_URL is not configured`, add `VITE_API_BASE_URL` in the Vercel project settings for the environments you use and redeploy.
+
+The app also includes a production fallback to `https://zubitechnologies.com/ota_server/api`, which matches the existing local proxy target.
+
+## Vite Template Notes
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
